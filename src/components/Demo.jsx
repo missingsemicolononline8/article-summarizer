@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { copy, linkIcon, loader, tick } from '../assets';
 import { useLazyGetSummaryQuery } from '../services/article';
+import { data } from 'autoprefixer';
 
 const Demo = () => {
 
@@ -26,11 +27,11 @@ const Demo = () => {
     const handleSubmit = async (e) => {
 
         e.preventDefault();
-        const { data } = await getSummary({ articleUrl: article.url })
+        const { data } = await getSummary({ articleUrl: article.url, summaryLength: 'long' })
 
-        if (data?.summary) {
+        if (data?.data.summary) {
             const newArticle = {
-                ...article, summary: data.summary
+                ...article, summary: data.data.summary
             }
             const updatedAllArticles = [newArticle, ...allArticles]
             setArticle(newArticle)
@@ -80,7 +81,7 @@ const Demo = () => {
                     Well, that wasn't supposed to happen...
                     <br />
                     <span className='font-satoshi font-normal text-gray-700'>
-                        {error?.data?.error}
+                        {error?.data?.error.message}
                     </span>
                 </p> : (
                     article.summary && <div className='flex flex-col gap-3'>

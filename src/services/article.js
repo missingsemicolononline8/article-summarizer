@@ -1,13 +1,12 @@
 import {createApi,fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 
-
 export const articleApi = createApi({
     reducerPath:'articleApi',
     baseQuery:fetchBaseQuery({
-        baseUrl:'https://article-extractor-and-summarizer.p.rapidapi.com/',
+        baseUrl:'https://api.apyhub.com/ai',
         prepareHeaders:(headers) => {
-            headers.set('X-RapidAPI-Key',import.meta.env.VITE_RAPID_API_ARTICLE_KEY);
-            headers.set('X-RapidAPI-Host','article-extractor-and-summarizer.p.rapidapi.com');
+            headers.set('Content-Type','application/json');
+            headers.set('apy-token',import.meta.env.VITE_APY_HUB_KEY);
 
             return headers;
         }
@@ -15,7 +14,11 @@ export const articleApi = createApi({
     endpoints: (builder) => (
         {
             getSummary:builder.query({
-                query:(params) => `/summarize?url=${encodeURIComponent(params.articleUrl)}`
+                query:(params) => ({
+                    url: '/summarize-url',
+                    method: 'POST',
+                    body: JSON.stringify({ url: params.articleUrl, summary_length: params.summaryLength }),
+                }),
             })
         }
     )
